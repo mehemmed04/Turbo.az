@@ -35,7 +35,8 @@
         <!-- set the MouseOverColor to Transparent when you do not need the effect in the unselected items -->
         <Color x:Key="MouseOverColor" >#00FFFFFF</Color>
 
-        <Style TargetType="ListViewItem">
+        <Style x:Key="ListViewItemStyle"
+           TargetType="ListViewItem">
             <Setter Property="SnapsToDevicePixels"
                 Value="true" />
             <Setter Property="OverridesDefaultStyle"
@@ -93,7 +94,8 @@
             </Setter>
         </Style>
 
-        <Style TargetType="{x:Type Thumb}">
+
+        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
@@ -116,9 +118,9 @@
         </Style>
 
         <!--SCROLLBARS-->
-        <Style TargetType="{x:Type ScrollBar}">
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="DarkRed"/>
             <Setter Property="Background" Value="DarkGray"/>
             <Setter Property="Width" Value="10"/>
             <Setter Property="Template">
@@ -188,6 +190,7 @@
             <ComboBox Width="200"
                       FontSize="16"
                       Height="28"
+                      SelectedItem="{Binding SelectedBrand}"
                       ItemsSource="{Binding Models,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       Margin="15,0"></ComboBox>
 
@@ -196,7 +199,8 @@
                            FontWeight="Bold"
                            FontSize="14">Is New</TextBlock>
 
-                <ToggleButton Height="20" Width="45">
+                <ToggleButton Height="20" Width="45"
+                              IsChecked="{Binding IsNew}">
                     <ToggleButton.Template>
                         <ControlTemplate TargetType="ToggleButton">
                             <Border x:Name="B1" Background="DarkRed"
@@ -225,6 +229,7 @@
             <ComboBox Width="120"
                       FontSize="16"
                       Height="28"
+                      SelectedItem="{Binding SelectedBan}"
                       ItemsSource="{Binding Bans,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       
                       Margin="15,0"></ComboBox>
@@ -233,14 +238,14 @@
                         Margin="15,0">
                 <StackPanel >
                     <TextBlock>Min Price</TextBlock>
-                    <TextBox Width="70" FontSize="16" Height="25"></TextBox>
+                    <TextBox Text="{Binding MinPrice}" Width="70" FontSize="16" Height="25"></TextBox>
                 </StackPanel>
                 <StackPanel Margin="10,0">
                     <TextBlock>Max Price</TextBlock>
-                    <TextBox Width="70" FontSize="16" Height="25"></TextBox>
+                    <TextBox Text="{Binding MaxPrice}" Width="70" FontSize="16" Height="25"></TextBox>
                 </StackPanel>
 
-                
+
             </StackPanel>
 
 
@@ -253,11 +258,11 @@
                         Margin="15,0">
                 <StackPanel>
                     <TextBlock>Min km</TextBlock>
-                    <TextBox Width="70" FontSize="16" Height="25"></TextBox>
+                    <TextBox Text="{Binding Minkm}" Width="70" FontSize="16" Height="25"></TextBox>
                 </StackPanel>
                 <StackPanel Margin="10,0">
                     <TextBlock>Max km</TextBlock>
-                    <TextBox Width="70" FontSize="16" Height="25"></TextBox>
+                    <TextBox Text="{Binding Maxkm}" Width="70" FontSize="16" Height="25"></TextBox>
                 </StackPanel>
             </StackPanel>
 
@@ -268,6 +273,7 @@
             <ComboBox Width="120"
                       FontSize="16"
                       Height="28"
+                      SelectedItem="{Binding SelectedColor}"
                       ItemsSource="{Binding Colors,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       
                       Margin="15,0"></ComboBox>
@@ -279,6 +285,7 @@
             <ComboBox Width="120"
                       FontSize="16"
                       Margin="15,0"
+                      SelectedItem="{Binding SelectedFuel}"
                       ItemsSource="{Binding FuelTypes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                       
                       Height="28"
@@ -301,12 +308,14 @@
         <StackPanel>
             <ListView
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              HorizontalAlignment="Center"
-                              BorderThickness="0"
-                              Margin="0,20,0,10"
-                             Background="Transparent"
-                             ScrollViewer.VerticalScrollBarVisibility="Visible"
-                ItemsSource="{Binding Cars,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                 HorizontalAlignment="Center"
+                 BorderThickness="0"
+                 Margin="0,20,0,0"
+                Height="350"
+                 Background="Transparent"
+                ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 ItemsSource="{Binding Cars,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                 <ListView.ItemTemplate >
                     <DataTemplate >
                         <Border
@@ -314,16 +323,26 @@
                                 Height="230"
                                 Margin="0,10,20,0" >
                             <StackPanel >
-                              
 
-                                <Image Height="190"
-                                       Width="100"
-                                       Source="{Binding ImagePath}">
-                                    
+
+                                <Image Height="120"
+                                       Width="130"
+                                       Source="{Binding ImagePath}"
+                                       Stretch="Fill">
+
                                 </Image>
 
-                                <TextBlock Text="{Binding Brand}" FontSize="14" Foreground="Black" FontWeight="Bold"></TextBlock>
+                                <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding Price}" FontSize="14" Foreground="Black" FontWeight="Bold"></TextBlock>
+                                    <TextBlock  FontSize="14" Foreground="Black" FontWeight="Bold" >$</TextBlock>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Brand}" FontSize="14" Foreground="Black" ></TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Year}" FontSize="14" Foreground="Black" ></TextBlock>
+                                    <TextBlock FontSize="14" Foreground="Black"  Text=", "></TextBlock>
+                                    <TextBlock Text="{Binding Mileage}" FontSize="14" Foreground="Black" ></TextBlock>
+                                    <TextBlock FontSize="14" Foreground="Black" > km</TextBlock>
+                                </StackPanel>
                             </StackPanel>
 
                         </Border>
